@@ -46,9 +46,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("Migrations applied successfully...");
 
     let state = AppState { _db: db };
-    let app: Router<AppState> = Router::new()
-        .route("/{id}", post(hello_world))
+    let app= Router::new()
+        .route("/", post(hello_world))
         .with_state(state);
+
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3001").await?;
+
+    info!("Server is running on http://0.0.0.0:3001");
+    debug!("Listening on port 3001...");
+    
+    axum::serve(listener, app).await
+        .map_err(|e| {
+            error!("Server error: {}", e);
+            e
+        })?;
 
     Ok(())
 }
