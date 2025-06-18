@@ -57,7 +57,7 @@ cargo run
 
 ## License
 
-MIT
+GPLv3
 
 ## Contact
 
